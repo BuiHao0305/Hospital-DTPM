@@ -1,8 +1,10 @@
 package com.springpro.hospital.Controllers;
 
 import com.springpro.hospital.Entities.Prescription;
+import com.springpro.hospital.Entities.MedicinePurchase;
 import com.springpro.hospital.Services.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,27 +21,48 @@ public class PrescriptionController {
     // Tạo đơn thuốc mới
     @PostMapping
     public ResponseEntity<Prescription> createPrescription(@RequestBody Prescription prescription) {
-        Prescription savedPrescription = prescriptionService.createPrescription(prescription);
-        return ResponseEntity.ok(savedPrescription);  // Trả về đơn thuốc đã được lưu
+        try {
+            Prescription createdPrescription = prescriptionService.createPrescription(prescription);
+            return new ResponseEntity<>(createdPrescription, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    // Lấy danh sách tất cả các đơn thuốc
+    // Thêm thuốc vào đơn thuốc
+    @PostMapping("/{id}/addMedicines")
+    public ResponseEntity<Prescription> addMedicinesToPrescription(@PathVariable String id,
+                                                                   @RequestBody List<MedicinePurchase> medicinePurchases) {
+        try {
+            Prescription updatedPrescription = prescriptionService.addMedicineToPrescription(id, medicinePurchases);
+            return new ResponseEntity<>(updatedPrescription, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Lấy danh sách đơn thuốc
     @GetMapping
-    public ResponseEntity<List<Prescription>> getAllPrescriptions() {
-        List<Prescription> prescriptions = prescriptionService.getAllPrescriptions();
-        return ResponseEntity.ok(prescriptions);
+    public List<Prescription> getAllPrescriptions() {
+        return prescriptionService.getAllPrescriptions();
     }
 
-    // Lấy đơn thuốc theo ID
+    // Lấy chi tiết đơn thuốc theo ID
     @GetMapping("/{id}")
     public ResponseEntity<Prescription> getPrescriptionById(@PathVariable String id) {
         Optional<Prescription> prescription = prescriptionService.getPrescriptionById(id);
-        return prescription.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return prescription.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Xóa đơn thuốc
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePrescription(@PathVariable String id) {
-        prescriptionService.deletePrescription(id);
-        return ResponseEntity.noContent().build();
+        try {
+            prescriptionService.deletePrescription(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
