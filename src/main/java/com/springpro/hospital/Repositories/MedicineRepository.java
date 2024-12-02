@@ -4,4 +4,5 @@ import com.springpro.hospital.Entities.Medicine;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MedicineRepository extends MongoRepository<Medicine, String> {
+    boolean existsByName(String name);
 }

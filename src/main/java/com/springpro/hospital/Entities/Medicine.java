@@ -15,7 +15,7 @@ public class Medicine {
     private double price;
     private String description;
     private int quantity;
-
+    private int category;
     // Getters and Setters
 
 }
