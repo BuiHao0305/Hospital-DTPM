@@ -1,5 +1,6 @@
 package com.springpro.hospital.Controllers;
 
+import com.springpro.hospital.ApiResponse.ApiResponse;
 import com.springpro.hospital.Entities.Medicine;
 import com.springpro.hospital.Services.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,32 +12,64 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/medicines")
 public class MedicineController {
+
     @Autowired
     private MedicineService medicineService;
 
     // Thêm thuốc
     @PostMapping
-    public ResponseEntity<Medicine> addMedicine(@RequestBody Medicine medicine) {
-        return ResponseEntity.ok(medicineService.addMedicine(medicine));
+    public ResponseEntity<Object> addMedicine(@RequestBody Medicine medicine) {
+        try {
+            Medicine savedMedicine = medicineService.addMedicine(medicine);
+            return ResponseEntity.ok().body(
+                    new ApiResponse(true, "Thêm thuốc thành công!", savedMedicine)
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(409).body(
+                    new ApiResponse(false, "Tên thuốc đã tồn tại trong hệ thống.")
+            );
+        }
     }
 
     // Cập nhật thông tin thuốc
     @PutMapping("/{id}")
-    public ResponseEntity<Medicine> updateMedicine(@PathVariable String id, @RequestBody Medicine medicine) {
-        return ResponseEntity.ok(medicineService.updateMedicine(id, medicine));
+    public ResponseEntity<Object> updateMedicine(@PathVariable String id, @RequestBody Medicine medicine) {
+        try {
+            Medicine updatedMedicine = medicineService.updateMedicine(id, medicine);
+            return ResponseEntity.ok().body(
+                    new ApiResponse(true, "Cập nhật thuốc thành công!", updatedMedicine)
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse(false, "Dữ liệu không hợp lệ.")
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(
+                    new ApiResponse(false, "Thuốc trùng với tên thuốc khác trong hệ thống.")
+            );
+        }
     }
 
     // Xóa thuốc
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMedicine(@PathVariable String id) {
-        medicineService.deleteMedicine(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> deleteMedicine(@PathVariable String id) {
+        try {
+            medicineService.deleteMedicine(id);
+            return ResponseEntity.ok().body(
+                    new ApiResponse(true, "Xóa thuốc thành công.")
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(
+                    new ApiResponse(false, "Thuốc không tồn tại, không thể xóa.")
+            );
+        }
     }
 
     // Lấy danh sách tất cả thuốc
     @GetMapping
     public ResponseEntity<List<Medicine>> getAllMedicines() {
-        return ResponseEntity.ok(medicineService.getAllMedicines());
+        List<Medicine> medicines = medicineService.getAllMedicines();
+        return ResponseEntity.ok(medicines);
     }
 
     // Lấy thông tin chi tiết thuốc theo ID
