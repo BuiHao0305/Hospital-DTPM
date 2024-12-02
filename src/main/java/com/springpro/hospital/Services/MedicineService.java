@@ -61,8 +61,8 @@ public class MedicineService {
 
     // Ánh xạ tên thể loại cho thuốc
     private Medicine mapCategoryName(Medicine medicine) {
-        String categoryName = MedicineCategoryMapper.getCategoryName(medicine.getCategory());
-        medicine.setDescription(medicine.getDescription() + " - Loại: " + categoryName);
+
+        medicine.setDescription(medicine.getDescription());
         return medicine;
     }
 
