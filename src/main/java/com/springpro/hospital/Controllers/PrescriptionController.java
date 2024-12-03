@@ -42,6 +42,17 @@ public class PrescriptionController {
         }
     }
 
+    // Cập nhật trạng thái đơn thuốc
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Prescription> updatePrescriptionStatus(@PathVariable String id, @RequestParam boolean status) {
+        try {
+            Prescription updatedPrescription = prescriptionService.updateStatus(id, status);
+            return new ResponseEntity<>(updatedPrescription, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // Lấy danh sách đơn thuốc
     @GetMapping
     public List<Prescription> getAllPrescriptions() {

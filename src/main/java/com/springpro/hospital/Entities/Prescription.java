@@ -18,6 +18,7 @@ public class Prescription {
     private List<MedicinePurchase> medicinePurchases; // Danh sách thuốc mua
     private double consultationFee;
     private double totalCost;
+    private boolean status =false;
 
     // Chi tiết thuốc (chỉ để hiển thị, không lưu trong MongoDB)
     private List<MedicineDetailDTO> medicineDetails;
