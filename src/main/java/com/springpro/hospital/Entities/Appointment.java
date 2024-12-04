@@ -17,7 +17,8 @@ public class Appointment {
     private String patientName;
     private String phoneNumber;
     private LocalDate appointmentDate;
-    private String notes;  // Ghi chú
+    private String notes;
+    private Boolean status = false;
 
 // Getters and Setters
 }

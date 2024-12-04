@@ -14,6 +14,7 @@ public class AppointmentService {
     private AppointmentRepository appointmentRepository;
 
     public Appointment addAppointment(Appointment appointment) {
+        appointment.setStatus(false); // Đặt giá trị mặc định là false
         return appointmentRepository.save(appointment);
     }
 
@@ -39,5 +40,17 @@ public class AppointmentService {
 
     public Optional<Appointment> getAppointmentById(String id) {
         return appointmentRepository.findById(id);
+    }
+
+    // Thêm phương thức để cập nhật status thành true
+    public Appointment updateStatusToTrue(String id) {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Appointment not found"));
+
+        appointment.setStatus(true); // Cập nhật status thành true
+        return appointmentRepository.save(appointment); // Lưu thay đổi vào cơ sở dữ liệu
+    }
+    public List<Appointment> getAppointmentsWithStatusFalse() {
+        return appointmentRepository.findByStatusFalse();
     }
 }

@@ -9,4 +9,5 @@ public class MedicinePurchase {
     private String medicineId;  // ID của thuốc
     private int quantity;       // Số lượng mua
     private double totalPrice;  // Tổng giá tiền thuốc
+    private String medicineName;
 }

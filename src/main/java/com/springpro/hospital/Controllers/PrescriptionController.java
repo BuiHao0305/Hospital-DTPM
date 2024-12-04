@@ -33,11 +33,14 @@ public class PrescriptionController {
     // Thêm thuốc vào đơn thuốc
     @PostMapping("/{id}/addMedicines")
     public ResponseEntity<Prescription> addMedicinesToPrescription(@PathVariable String id,
-                                                                   @RequestBody List<MedicinePurchase> medicinePurchases) {
+                                                                   @RequestBody Prescription prescriptionRequest) {
         try {
-            Prescription updatedPrescription = prescriptionService.addMedicineToPrescription(id, medicinePurchases);
+            // Gọi service để thêm thuốc vào đơn thuốc
+            Prescription updatedPrescription = prescriptionService.addMedicineToPrescription(id, prescriptionRequest);
             return new ResponseEntity<>(updatedPrescription, HttpStatus.OK);
         } catch (Exception e) {
+            // Nếu có lỗi xảy ra, trả về BAD_REQUEST
+            e.printStackTrace();  // In ra chi tiết lỗi để debug
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
