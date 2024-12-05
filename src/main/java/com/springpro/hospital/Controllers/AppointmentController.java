@@ -99,7 +99,7 @@ public class AppointmentController {
     public ResponseEntity<ApiResponse> updateStatusToTrue(@PathVariable String id) {
         try {
             Appointment updatedAppointment = appointmentService.updateStatusToTrue(id);
-            ApiResponse response = new ApiResponse(true, "Lịch khám ddowjc", updatedAppointment);
+            ApiResponse response = new ApiResponse(true, "Lịch khám được thay đổi thành công", updatedAppointment);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             ApiResponse response = new ApiResponse(false, "Error: " + e.getMessage(), null);

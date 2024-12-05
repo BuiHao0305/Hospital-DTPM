@@ -13,4 +13,5 @@ public class TotalCostSummary {
     private String id;
     private double totalCost;
 
+
 }

@@ -54,6 +54,8 @@ public class PrescriptionService {
         }
 
         prescription.setTotalCost(totalCost);
+
+        // Lưu đơn thuốc
         Prescription savedPrescription = prescriptionRepository.save(prescription);
 
         // Cập nhật tổng cost nếu status = true
@@ -208,5 +210,14 @@ public class PrescriptionService {
     // Xóa đơn thuốc
     public void deletePrescription(String id) {
         prescriptionRepository.deleteById(id);
+    }
+    // Phương thức lấy tổng chi phí tổng
+    public double getTotal() {
+        // Lấy tổng chi phí từ đối tượng TotalCostSummary
+        Optional<TotalCostSummary> totalCostSummaryOpt = totalCostSummaryRepository.findById("1");
+        if (totalCostSummaryOpt.isPresent()) {
+            return totalCostSummaryOpt.get().getTotalCost();
+        }
+        return 0.0; // Trả về 0 nếu không tìm thấy bản ghi
     }
 }
